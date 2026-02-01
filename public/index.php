@@ -91,6 +91,15 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
         mkdir($cachePath, 0777, true);
     }
     
+    // FORCE CLEAR STALE CONFIG CACHE (Fix for BindingResolutionException)
+    // This ensures we don't load a cached config from when config/app.php was missing
+    if (file_exists("{$cachePath}/config.php")) {
+        @unlink("{$cachePath}/config.php");
+    }
+    if (file_exists("{$cachePath}/services.php")) {
+        @unlink("{$cachePath}/services.php");
+    }
+    
     putenv("APP_PACKAGES_CACHE={$cachePath}/packages.php");
     putenv("APP_SERVICES_CACHE={$cachePath}/services.php");
     putenv("APP_CONFIG_CACHE={$cachePath}/config.php");

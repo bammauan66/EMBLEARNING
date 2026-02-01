@@ -35,17 +35,24 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
         mkdir('/tmp/storage/logs', 0777, true);
     }
 
-    // Force SQLite to use /tmp
-    $dbConnection = $_ENV['DB_CONNECTION'] ?? getenv('DB_CONNECTION');
-    
-    if ($dbConnection === 'sqlite') {
+    if (isset($_ENV['DB_CONNECTION']) && $_ENV['DB_CONNECTION'] === 'sqlite') {
         $dbPath = '/tmp/database.sqlite';
-        if (!file_exists($dbPath)) {
+        $needsMigration = !file_exists($dbPath);
+        
+        if ($needsMigration) {
             touch($dbPath);
         }
+        
         // Set env vars so Laravel config picks them up later
         $_ENV['DB_DATABASE'] = $dbPath;
         putenv("DB_DATABASE={$dbPath}");
+
+        if ($needsMigration) {
+            // Boot kernel and migrate (silently)
+            $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+            $kernel->bootstrap();
+            $kernel->call('migrate', ['--force' => true]);
+        }
     }
     
     // Redirect Laravel bootstrap caches to /tmp (Writable)

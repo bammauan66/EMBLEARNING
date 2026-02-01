@@ -36,13 +36,16 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
     }
 
     // Force SQLite to use /tmp
-    $env = parse_ini_file(__DIR__.'/../.env');
-    if (isset($_ENV['DB_CONNECTION']) && $_ENV['DB_CONNECTION'] === 'sqlite') {
+    $dbConnection = $_ENV['DB_CONNECTION'] ?? getenv('DB_CONNECTION');
+    
+    if ($dbConnection === 'sqlite') {
         $dbPath = '/tmp/database.sqlite';
         if (!file_exists($dbPath)) {
             touch($dbPath);
         }
-        $app['config']->set('database.connections.sqlite.database', $dbPath);
+        // Set env vars so Laravel config picks them up later
+        $_ENV['DB_DATABASE'] = $dbPath;
+        putenv("DB_DATABASE={$dbPath}");
     }
 }
 

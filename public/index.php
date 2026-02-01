@@ -20,6 +20,20 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 // Fix for Vercel read-only filesystem
 if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
     $app->useStoragePath('/tmp/storage');
+    
+    // Ensure storage subdirectories exist
+    if (!is_dir('/tmp/storage/framework/views')) {
+        mkdir('/tmp/storage/framework/views', 0777, true);
+    }
+    if (!is_dir('/tmp/storage/framework/sessions')) {
+        mkdir('/tmp/storage/framework/sessions', 0777, true);
+    }
+    if (!is_dir('/tmp/storage/framework/cache')) {
+        mkdir('/tmp/storage/framework/cache', 0777, true);
+    }
+    if (!is_dir('/tmp/storage/logs')) {
+        mkdir('/tmp/storage/logs', 0777, true);
+    }
 }
 
 $app->handleRequest(Request::capture());

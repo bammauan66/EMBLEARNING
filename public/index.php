@@ -41,48 +41,15 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
 
     if (isset($_ENV['DB_CONNECTION']) && $_ENV['DB_CONNECTION'] === 'sqlite') {
         $dbPath = '/tmp/database.sqlite';
-        // Check if DB is missing OR empty (0 bytes) indicating a failed previous init
-        $needsMigration = !file_exists($dbPath) || filesize($dbPath) === 0;
         
-        if ($needsMigration) {
-            // Ensure file exists for connection
-            if (!file_exists($dbPath)) {
-                touch($dbPath);
-            }
+        // Ensure DB file exists
+        if (!file_exists($dbPath)) {
+            touch($dbPath);
         }
         
         // Set env vars so Laravel config picks them up later
         $_ENV['DB_DATABASE'] = $dbPath;
         putenv("DB_DATABASE={$dbPath}");
-
-        if ($needsMigration) {
-            try {
-                $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
-                $kernel->bootstrap();
-                $kernel->call('migrate', ['--force' => true]);
-
-                // Seed default users for ephemeral DB
-                \App\Models\User::create([
-                    'name' => 'Admin User',
-                    'email' => 'admin@example.com',
-                    'password' => \Illuminate\Support\Facades\Hash::make('password'),
-                    'role' => 'admin',
-                    'email_verified_at' => now(),
-                ]);
-                
-                \App\Models\User::create([
-                    'name' => 'Student User',
-                    'email' => 'student@example.com',
-                    'password' => \Illuminate\Support\Facades\Hash::make('password'),
-                    'role' => 'student',
-                    'email_verified_at' => now(),
-                ]);
-            } catch (\Throwable $e) {
-                // Log failure but allow app to proceed (so we see the error in logs, not a white screen)
-                error_log("Migration/Seed Failed: " . $e->getMessage());
-                error_log($e->getTraceAsString());
-            }
-        }
     }
     
     // Redirect Laravel bootstrap caches to /tmp (Writable)

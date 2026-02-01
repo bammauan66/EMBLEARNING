@@ -34,6 +34,16 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
     if (!is_dir('/tmp/storage/logs')) {
         mkdir('/tmp/storage/logs', 0777, true);
     }
+
+    // Force SQLite to use /tmp
+    $env = parse_ini_file(__DIR__.'/../.env');
+    if (isset($_ENV['DB_CONNECTION']) && $_ENV['DB_CONNECTION'] === 'sqlite') {
+        $dbPath = '/tmp/database.sqlite';
+        if (!file_exists($dbPath)) {
+            touch($dbPath);
+        }
+        $app['config']->set('database.connections.sqlite.database', $dbPath);
+    }
 }
 
 $app->handleRequest(Request::capture());

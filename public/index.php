@@ -47,6 +47,13 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
         $_ENV['DB_DATABASE'] = $dbPath;
         putenv("DB_DATABASE={$dbPath}");
     }
+    
+    // Clear bootstrap cache to prevent path issues
+    $cachePath = __DIR__.'/../bootstrap/cache';
+    $files = glob($cachePath.'/*.php');
+    foreach ($files as $file) {
+        @unlink($file);
+    }
 }
 
 $app->handleRequest(Request::capture());

@@ -19,6 +19,10 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 
 // Fix for Vercel read-only filesystem
 if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
+    // Capture and bind request early so Exception Handler can use it
+    $request = Request::capture();
+    $app->instance('request', $request);
+
     $app->useStoragePath('/tmp/storage');
     
     // Ensure storage subdirectories exist
@@ -52,12 +56,12 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
         putenv("DB_DATABASE={$dbPath}");
 
         if ($needsMigration) {
-            $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
-            $kernel->bootstrap();
-            $kernel->call('migrate', ['--force' => true]);
-
-            // Seed default users for ephemeral DB
             try {
+                $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+                $kernel->bootstrap();
+                $kernel->call('migrate', ['--force' => true]);
+
+                // Seed default users for ephemeral DB
                 \App\Models\User::create([
                     'name' => 'Admin User',
                     'email' => 'admin@example.com',
@@ -73,8 +77,10 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
                     'role' => 'student',
                     'email_verified_at' => now(),
                 ]);
-            } catch (\Exception $e) {
-                // Ignore if already exists (shouldn't happen on fresh db but safe to catch)
+            } catch (\Throwable $e) {
+                // Log failure but allow app to proceed (so we see the error in logs, not a white screen)
+                fwrite(STDERR, "Migration/Seed Failed: " . $e->getMessage() . "\n");
+                fwrite(STDERR, $e->getTraceAsString() . "\n");
             }
         }
     }
@@ -96,6 +102,8 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
     $_ENV['APP_CONFIG_CACHE'] = "{$cachePath}/config.php";
     $_ENV['APP_ROUTES_CACHE'] = "{$cachePath}/routes.php";
     $_ENV['APP_EVENTS_CACHE'] = "{$cachePath}/events.php";
+    
+    $app->handleRequest($request);
+} else {
+    $app->handleRequest(Request::capture());
 }
-
-$app->handleRequest(Request::capture());

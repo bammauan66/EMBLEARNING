@@ -52,6 +52,7 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
         putenv("DB_DATABASE={$dbPath}");
 
         if ($needsMigration) {
+            $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
             $kernel->bootstrap();
             $kernel->call('migrate', ['--force' => true]);
 

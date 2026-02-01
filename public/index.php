@@ -37,10 +37,14 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
 
     if (isset($_ENV['DB_CONNECTION']) && $_ENV['DB_CONNECTION'] === 'sqlite') {
         $dbPath = '/tmp/database.sqlite';
-        $needsMigration = !file_exists($dbPath);
+        // Check if DB is missing OR empty (0 bytes) indicating a failed previous init
+        $needsMigration = !file_exists($dbPath) || filesize($dbPath) === 0;
         
         if ($needsMigration) {
-            touch($dbPath);
+            // Ensure file exists for connection
+            if (!file_exists($dbPath)) {
+                touch($dbPath);
+            }
         }
         
         // Set env vars so Laravel config picks them up later

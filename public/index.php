@@ -79,8 +79,8 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
                 ]);
             } catch (\Throwable $e) {
                 // Log failure but allow app to proceed (so we see the error in logs, not a white screen)
-                fwrite(STDERR, "Migration/Seed Failed: " . $e->getMessage() . "\n");
-                fwrite(STDERR, $e->getTraceAsString() . "\n");
+                error_log("Migration/Seed Failed: " . $e->getMessage());
+                error_log($e->getTraceAsString());
             }
         }
     }

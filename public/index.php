@@ -17,4 +17,9 @@ require __DIR__.'/../vendor/autoload.php';
 /** @var Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
+// Fix for Vercel read-only filesystem
+if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
+    $app->useStoragePath('/tmp/storage');
+}
+
 $app->handleRequest(Request::capture());

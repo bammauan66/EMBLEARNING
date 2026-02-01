@@ -48,10 +48,29 @@ if (array_key_exists('VERCEL', $_SERVER) || array_key_exists('VERCEL', $_ENV)) {
         putenv("DB_DATABASE={$dbPath}");
 
         if ($needsMigration) {
-            // Boot kernel and migrate (silently)
-            $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
             $kernel->bootstrap();
             $kernel->call('migrate', ['--force' => true]);
+
+            // Seed default users for ephemeral DB
+            try {
+                \App\Models\User::create([
+                    'name' => 'Admin User',
+                    'email' => 'admin@example.com',
+                    'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                    'role' => 'admin',
+                    'email_verified_at' => now(),
+                ]);
+                
+                \App\Models\User::create([
+                    'name' => 'Student User',
+                    'email' => 'student@example.com',
+                    'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                    'role' => 'student',
+                    'email_verified_at' => now(),
+                ]);
+            } catch (\Exception $e) {
+                // Ignore if already exists (shouldn't happen on fresh db but safe to catch)
+            }
         }
     }
     

@@ -9,6 +9,9 @@ class QuestionsTableSeeder extends Seeder
 {
     public function run()
     {
+        // Truncate the table first to avoid duplicates
+        DB::table('questions')->truncate();
+
         $questions = [
             // Lesson 1 (Q1-3)
             [

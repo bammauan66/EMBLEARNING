@@ -10,6 +10,10 @@ set -m
 echo "Running migrations..."
 php artisan migrate --force
 
+# Run Seeders (Force for production)
+echo "Running seeders..."
+php artisan db:seed --force
+
 # Clear and Cache config
 echo "Caching configuration..."
 php artisan config:cache

@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: wilcom-elearning
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    repo: https://github.com/bammauan66/EMBLEARNING
+    envVars:
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_Debug
+        value: "true"
+      - key: APP_URL
+        value: https://wilcom-elearning.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: wilcom-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: wilcom-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: wilcom-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: wilcom-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: wilcom-db
+          property: password
+
+databases:
+  - name: wilcom-db
+    plan: free
+    region: singapore
+    databaseName: wilcom
+    user: kwan

@@ -251,14 +251,12 @@
                              @endif
                         @endif
                     </div>
-                        </div>
                 </div>
             </div>
             @php
                 // Update tracker for next loop
                 $previousLessonPassed = $currentLessonPassed;
             @endphp
-            </div>
         @endforeach
 
         <!-- 3. Final Exam Card -->

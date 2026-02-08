@@ -54,30 +54,8 @@ Route::middleware('auth')->group(function () {
         return view('dashboard', compact('lessons', 'hasCertificate', 'hasCoursePretest', 'passedLessons'));
     })->name('dashboard');
 
-    // Student Dashboard
-    Route::get('/student/dashboard', function () {
-        $lessons = DB::table('lessons')->orderBy('id')->get();
-        // Check if user has done course pre-test
-        $hasCoursePretest = DB::table('scores')
-                            ->where('user_id', auth()->id())
-                            ->where('lesson_id', 0)
-                            ->exists();
-
-        // Check if user passed final exam
-        $hasCertificate = DB::table('final_scores')
-                            ->where('user_id', auth()->id())
-                            ->where('pass', true)
-                            ->exists();
-        
-        // Get passed lessons IDs
-        $passedLessons = DB::table('scores')
-                            ->where('user_id', auth()->id())
-                            ->where('pass', true)
-                            ->pluck('lesson_id')
-                            ->toArray();
-
-        return view('student.dashboard', compact('lessons', 'hasCertificate', 'hasCoursePretest', 'passedLessons'));
-    })->name('student.dashboard');
+    // Student Dashboard route removed as it is incorrect.
+    // Students should use the main /dashboard route.
 
     // Teacher Dashboard
     Route::get('/teacher/dashboard', function () {

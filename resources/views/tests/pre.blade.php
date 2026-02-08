@@ -52,7 +52,7 @@
 
             <!-- Action Buttons -->
             <div class="flex justify-between items-center pt-4">
-                <a href="/student/dashboard" class="text-gray-500 hover:text-gray-700 font-medium px-4 py-2 rounded transition-colors hover:bg-gray-100">
+                <a href="/dashboard" class="text-gray-500 hover:text-gray-700 font-medium px-4 py-2 rounded transition-colors hover:bg-gray-100">
                     &larr; กลับหน้าหลัก
                 </a>
                 <button type="submit" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 focus:ring-4 focus:ring-blue-300">

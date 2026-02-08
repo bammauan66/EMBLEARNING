@@ -22,7 +22,7 @@
             <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
             <div class="relative z-10 p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div class="text-white">
-                    <a href="/student/dashboard" class="inline-flex items-center text-green-100 hover:text-white mb-4 transition text-sm">
+                    <a href="/dashboard" class="inline-flex items-center text-green-100 hover:text-white mb-4 transition text-sm">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                         กลับหน้าแดชบอร์ด
                     </a>
@@ -32,7 +32,7 @@
                 
                 
                 @if($hasCertificate ?? false)
-                    <a href="/student/dashboard" class="bg-white text-green-800 px-6 py-3 rounded-xl shadow-lg hover:bg-green-50 hover:shadow-xl transition font-bold flex items-center transform hover:-translate-y-1">
+                    <a href="/dashboard" class="bg-white text-green-800 px-6 py-3 rounded-xl shadow-lg hover:bg-green-50 hover:shadow-xl transition font-bold flex items-center transform hover:-translate-y-1">
                         <span>กลับสู่หน้าหลัก</span>
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     </a>

@@ -64,7 +64,7 @@
 
     <!-- Print Button (Hidden in Print) -->
     <div class="fixed bottom-8 right-8 print:hidden flex space-x-4">
-        <a href="/student/dashboard" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105">
+        <a href="/dashboard" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105">
             กลับหน้าหลัก
         </a>
         <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center space-x-2">

@@ -29,8 +29,14 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="video_url" class="block text-gray-700 text-sm font-bold mb-2">Video URL (Youtube Embed):</label>
-                        <input type="url" name="video_url" id="video_url" value="{{ $lesson->video_url }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <label for="video_url" class="block text-gray-700 text-sm font-bold mb-2">Video URL:</label>
+                        <input type="text" name="video_url" id="video_url" value="{{ $lesson->video_url }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="https://www.youtube.com/watch?v=... หรือ Link ไฟล์ .mp4">
+                        <p class="text-sm text-gray-500 mt-1">
+                            รองรับ: 
+                            <span class="inline-block bg-red-100 text-red-800 px-1 rounded">YouTube Link</span>, 
+                            <span class="inline-block bg-blue-100 text-blue-800 px-1 rounded">Embed Code (&lt;iframe...&gt;)</span>, 
+                            <span class="inline-block bg-green-100 text-green-800 px-1 rounded">Direct File (.mp4)</span>
+                        </p>
                     </div>
 
                     <div class="mb-4">

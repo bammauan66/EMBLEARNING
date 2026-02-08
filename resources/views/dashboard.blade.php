@@ -187,21 +187,22 @@
         </div>
 
         <!-- 2. Lessons Loop -->
+        @php
+            $previousLessonPassed = $hasCoursePretest ?? false;
+        @endphp
         @foreach($lessons as $lesson)
             @php
                 $isLocked = true; 
-                // Unlock check
+                
                 if ($hasCertificate ?? false) {
                     $isLocked = false;
                 } else {
-                    if ($lesson->id == 1) {
-                        $isLocked = !($hasCoursePretest ?? false);
-                    } else {
-                        $prevId = $lesson->id - 1;
-                        $passed = $passedLessons ?? [];
-                        $isLocked = !in_array($prevId, $passed);
-                    }
+                    // Unlock if previous lesson was passed (initially checking pretest)
+                    $isLocked = !$previousLessonPassed;
                 }
+                
+                // Check if current lesson is passed for the next iteration
+                $currentLessonPassed = in_array($lesson->id, $passedLessons ?? []);
             @endphp
 
             <div id="lesson-card-{{ $lesson->id }}" class="group relative bg-white/90 backdrop-blur-sm dark:bg-slate-800/90 rounded-2xl shadow-card hover:shadow-2xl hover:shadow-green-500/10 border border-gray-100 dark:border-slate-700 transition-all duration-300 flex flex-col h-full overflow-hidden {{ $isLocked ? 'grayscale opacity-75' : 'hover:-translate-y-2' }} animate-fade-in-up" style="animation-delay: {{ 300 + ($lesson->id * 50) }}ms">
@@ -250,7 +251,13 @@
                              @endif
                         @endif
                     </div>
+                        </div>
                 </div>
+            </div>
+            @php
+                // Update tracker for next loop
+                $previousLessonPassed = $currentLessonPassed;
+            @endphp
             </div>
         @endforeach
 

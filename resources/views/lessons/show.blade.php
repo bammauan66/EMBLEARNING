@@ -2,13 +2,20 @@
 
 @section('content')
 @php
-    // Helper to get video ID or Embed URL if needed, but assuming user enters Embed URL as per placeholder
-    // If user enters 'https://www.youtube.com/watch?v=VIDEO_ID', we might need to handle it.
-    // For now, let's trust the input or simple replace.
     $videoUrl = $lesson->video_url;
-    // Regex to extract video ID from various YouTube URL formats
-    $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i';
-    if (preg_match($pattern, $videoUrl, $matches)) {
+    $isVideoFile = false;
+
+    // 1. Check if user pasted a raw <iframe> code
+    if (preg_match('/<iframe.*?src=["\'](.*?)["\']/', $videoUrl, $matches)) {
+        $videoUrl = $matches[1];
+    }
+
+    // 2. Check if it is a direct video file (mp4, webm, ogg)
+    if (preg_match('/\.(mp4|webm|ogg)$/i', $videoUrl)) {
+        $isVideoFile = true;
+    } 
+    // 3. YouTube Handling (Convert Watch URL to Embed URL if not already)
+    elseif (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i', $videoUrl, $matches)) {
         $videoUrl = 'https://www.youtube.com/embed/' . $matches[1];
     }
 @endphp
@@ -50,15 +57,26 @@
             
             <!-- Video Player Section (Left - 2 Cols) -->
             <div class="lg:col-span-2 space-y-4">
-                <div class="bg-black rounded-xl shadow-lg overflow-hidden aspect-video relative group">
-                    <iframe 
-                        class="w-full h-full"
-                        src="{{ $videoUrl }}" 
-                        title="Lesson Video" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
+                <div class="bg-black rounded-xl shadow-lg overflow-hidden aspect-video relative group flex items-center justify-center">
+                    @if($isVideoFile)
+                        <video controls class="w-full h-full" controlsList="nodownload">
+                            <source src="{{ $videoUrl }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    @elseif($videoUrl)
+                        <iframe 
+                            class="w-full h-full"
+                            src="{{ $videoUrl }}" 
+                            title="Lesson Video" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    @else
+                        <div class="text-white text-center p-10">
+                            <p class="text-lg">ไม่พบวิดีโอสำหรับบทเรียนนี้</p>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Content & Attachment -->
@@ -98,23 +116,21 @@
                     เนื้อหาในหลักสูตร
                 </h3>
                 <div class="space-y-3">
-                    @foreach($allLessons as $l)
+                    @php
+                            $previousLessonPassed = $hasCoursePretest ?? false;
+                        @endphp
+                        @foreach($allLessons as $l)
                         @php
                             $isLocked = true;
                             if (($hasCertificate ?? false)) {
                                 $isLocked = false;
                             } else {
-                                if ($l->id == 1) {
-                                    $isLocked = !($hasCoursePretest ?? false);
-                                } else {
-                                    $prevId = $l->id - 1;
-                                    $passed = $passedLessons ?? [];
-                                    $isLocked = !in_array($prevId, $passed);
-                                }
+                                $isLocked = !$previousLessonPassed;
                             }
                             
+                            $currentLessonPassed = in_array($l->id, $passedLessons ?? []);
                             $isActive = $l->id == $lesson->id;
-                            $isPassed = in_array($l->id, $passedLessons ?? []);
+                            $isPassed = $currentLessonPassed;
                         @endphp
 
                         @if($isLocked)
@@ -158,12 +174,17 @@
                                 </div>
                             </a>
                         @endif
+                        @php
+                             $previousLessonPassed = $currentLessonPassed;
+                        @endphp
                     @endforeach
                     
                     <!-- Final Exam Item -->
                     @php
                         $finalLocked = true;
-                        if (($hasCertificate ?? false) || count($passedLessons ?? []) >= 5) {
+                        // Build list of only passed Post-Tests (which $passedLessons is)
+                        // Unlock if Certified OR (Passed Count >= Total Lessons)
+                        if (($hasCertificate ?? false) || count($passedLessons ?? []) >= count($allLessons)) {
                             $finalLocked = false;
                         }
                     @endphp

@@ -34,5 +34,10 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]);
         }
+        // Call other seeders
+        $this->call([
+            LessonSeeder::class,
+            QuestionsTableSeeder::class,
+        ]);
     }
 }

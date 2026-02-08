@@ -142,30 +142,4 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-// Temporary Debug Route for Render
-Route::get('/test-mail', function () {
-    try {
-        $config = [
-            'transport' => config('mail.mailers.smtp.transport'),
-            'host' => config('mail.mailers.smtp.host'),
-            'port' => config('mail.mailers.smtp.port'),
-            'encryption' => config('mail.mailers.smtp.encryption'),
-            'username' => config('mail.mailers.smtp.username'),
-            'password' => 'HIDDEN', // Don't show password
-            'from' => config('mail.from'),
-        ];
-        
-        \Illuminate\Support\Facades\Log::info('Testing email with config: ', $config);
-        
-        \Illuminate\Support\Facades\Mail::raw('Test email from Render (Brevo)', function ($msg) {
-            $msg->to('bammauan0606@gmail.com') // Send to self
-                ->subject('Test Email Render');
-        });
-        
-        return 'Email sent successfully! <br> Config used: <pre>' . print_r($config, true) . '</pre>';
-    } catch (\Exception $e) {
-        return '<h1>Error Occurred</h1><pre>' . $e->getMessage() . '</pre><br>Config that failed: <pre>' . print_r($config, true) . '</pre>';
-    }
-});
-
 require __DIR__.'/auth.php';

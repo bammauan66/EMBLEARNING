@@ -9,10 +9,12 @@ services:
     envVars:
       - key: APP_KEY
         generateValue: true
-      - key: APP_Debug
+      - key: APP_DEBUG
         value: "true"
       - key: APP_URL
         value: https://wilcom-elearning.onrender.com
+      - key: LOG_CHANNEL
+        value: stderr
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST

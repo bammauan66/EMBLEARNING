@@ -18,7 +18,7 @@ services:
       - key: MAIL_MAILER
         value: smtp
       - key: MAIL_HOST
-        value: smtp.mailgun.org
+        value: smtp-relay.brevo.com
       - key: MAIL_PORT
         value: 587
       - key: MAIL_USERNAME

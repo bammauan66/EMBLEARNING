@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificate of Completion - {{ $user->name }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @page {
@@ -17,7 +17,7 @@
             -webkit-print-color-adjust: exact;
         }
         .cert-font {
-            font-family: 'Pinyon Script', cursive;
+            font-family: 'Charmonman', cursive;
         }
     </style>
 </head>

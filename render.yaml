@@ -22,13 +22,13 @@ services:
       - key: MAIL_PORT
         value: 587
       - key: MAIL_USERNAME
-        sync: false
+        value: a1dd47001@smtp-brevo.com
       - key: MAIL_PASSWORD
-        sync: false
+        value: bskScfhaD74jL0k
       - key: MAIL_ENCRYPTION
         value: tls
       - key: MAIL_FROM_ADDRESS
-        sync: false
+        value: bammauan0606@gmail.com
       - key: MAIL_FROM_NAME
         value: "Wilcom E-Learning"
       - key: DB_CONNECTION

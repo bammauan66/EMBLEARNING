@@ -129,6 +129,7 @@ class AdminController extends Controller
                 \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\NewPasswordMail($request->password));
                 $emailSent = true;
             } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Mail Error: ' . $e->getMessage());
                 // Log error or set flag but don't fail the update
                 $emailSent = false;
             }

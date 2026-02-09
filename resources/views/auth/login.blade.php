@@ -16,7 +16,7 @@
                 </div>
                 
                 <h2 class="text-3xl font-bold text-white mb-4">
-                    ยินดีต้อนรับกลับ!
+                    ยินดีต้อนรับ!
                 </h2>
                 <p class="text-green-50 text-opacity-90 mb-8 max-w-xs mx-auto">
                     เข้าสู่ระบบเพื่อเรียนรู้และพัฒนาทักษะของคุณต่อ
